@@ -1,6 +1,6 @@
 # terraform-aws-auto-remediate-waf-loss
 
-![Terraform](https://img.shields.io/badge/Terraform-%3E%3D1.2-7B42BC?logo=terraform)
+![Terraform](https://img.shields.io/badge/Terraform-%3E%3D1.12-7B42BC?logo=terraform)
 ![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python)
 ![AWS Lambda](https://img.shields.io/badge/AWS-Lambda-FF9900?logo=amazon-aws)
 
@@ -82,7 +82,7 @@ CloudFront API call
 | Alerting | Amazon SNS (email subscription) | Notifies the team after remediation |
 | Golden WAF reference | `data.aws_wafv2_web_acl` | Looks up the WAF ARN at apply time (no hardcoding) |
 | IAM | Least-privilege custom policy | Scoped to CloudFront, WAF read, SQS, SNS only |
-| Infrastructure-as-Code | Terraform ≥ 1.2 | All AWS resources declared and version-controlled |
+| Infrastructure-as-Code | Terraform ≥ 1.12 | All AWS resources declared and version-controlled |
 | Remote state | HCP Terraform Cloud | State locking, secrets-free local workflow |
 
 ### Lambda logic (remediate.py)
@@ -145,9 +145,9 @@ terraform apply
 
 | Requirement | Version / Detail |
 |---|---|
-| [Terraform CLI](https://developer.hashicorp.com/terraform/downloads) | ≥ 1.2 |
+| [Terraform CLI](https://developer.hashicorp.com/terraform/downloads) | ≥ 1.12 |
 | AWS provider | ~> 6.0 |
-| archive provider | ~> 2.0 |
+| archive provider | ~> 2.7 |
 | **terraform-aws-wafacl-golden deployed first** | The golden WAF ACL must exist before this workspace is applied |
 | CloudTrail enabled | Must be active in `us-east-1`; EventBridge cannot receive API call events without it |
 
