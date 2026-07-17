@@ -130,6 +130,7 @@ module "auto_remediate_waf_loss" {
 ```bash
 git clone https://github.com/victorfengdj/terraform-aws-auto-remediate-waf-loss.git
 cd terraform-aws-auto-remediate-waf-loss
+# edit terraform.tf: set organization to your own HCP Terraform org
 terraform login        # authenticate with HCP Terraform (one-time)
 terraform init
 terraform plan
@@ -147,13 +148,20 @@ terraform apply
 | [Terraform CLI](https://developer.hashicorp.com/terraform/downloads) | ≥ 1.2 |
 | AWS provider | ~> 6.0 |
 | archive provider | ~> 2.0 |
-| [HCP Terraform account](https://app.terraform.io) | org `wgf`, workspace `terraform-aws-auto-remediate-waf-loss` |
-| AWS credentials | configured in the HCP Terraform workspace as environment variables |
 | **terraform-aws-wafacl-golden deployed first** | The golden WAF ACL must exist before this workspace is applied |
 | CloudTrail enabled | Must be active in `us-east-1`; EventBridge cannot receive API call events without it |
 
 > **Region note:** All resources deploy to `us-east-1`. CloudFront-scoped WAFs, CloudFront
 > CloudTrail events, and the EventBridge rule that captures them must all be in the same region.
+
+### Credentials & secrets handling
+
+This project stores no secrets in the repository, in Terraform state, or at runtime.
+
+| Layer | Mechanism | Detail |
+|---|---|---|
+| Remote state | HCP Terraform | org — edit `organization` in `terraform.tf` to your own HCP Terraform org; workspace — defaults to `aws_auto_remediate_waf_loss` (project `aws`). State is stored remotely, encrypted at rest, with access restricted to the workspace |
+| Deployment credentials | HCP Terraform workspace environment variables, marked **Sensitive** | Write-only once saved — cannot be read back through the UI or API; never appear in the repository, plan output, or on a local machine. For production, [dynamic provider credentials](https://developer.hashicorp.com/terraform/cloud-docs/workspaces/dynamic-provider-credentials) (OIDC) are recommended — Terraform assumes a short-lived IAM role per run, so no static credentials are stored at all |
 
 ### Steps
 
@@ -167,16 +175,20 @@ cd terraform-aws-auto-remediate-waf-loss
 #    Option B — create a local terraform.tfvars (never commit this file)
 echo 'notification_email = "your-team@example.com"' > terraform.tfvars
 
-# 3. Authenticate with HCP Terraform (one-time setup)
+# 3. Point at your own HCP Terraform organization —
+#    edit terraform.tf and replace organization = "change-to-your-org"
+#    with your org name (adjust the workspace project/name if desired)
+
+# 4. Authenticate with HCP Terraform (one-time setup)
 terraform login
 
-# 4. Initialise — downloads providers, packages Lambda zip, connects to workspace
+# 5. Initialise — downloads providers, packages Lambda zip, connects to workspace
 terraform init
 
-# 5. Preview the changes
+# 6. Preview the changes
 terraform plan
 
-# 6. Apply
+# 7. Apply
 terraform apply
 ```
 

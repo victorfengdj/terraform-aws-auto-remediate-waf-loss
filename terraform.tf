@@ -1,6 +1,7 @@
 terraform {
   cloud {
-    organization = "wgf"
+    # Replace with your own HCP Terraform organization before `terraform init`.
+    organization = "change-to-your-org"
     workspaces {
       project = "aws"
       name    = "aws_auto_remediate_waf_loss"
