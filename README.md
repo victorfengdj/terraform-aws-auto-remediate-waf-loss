@@ -205,9 +205,3 @@ is clicked.
 | `notification_email` | _(required)_ | Email address for remediation alerts |
 | `golden_waf_name` | `aws_wafacl_golden` | Name of the baseline WAF ACL to enforce |
 | `remediation_delay_seconds` | `15` | SQS delay in seconds before Lambda checks the distribution |
-
----
-
-## Related Projects
-
-- **[terraform-aws-wafacl-golden](https://github.com/victorfengdj/terraform-aws-wafacl-golden)** — The enterprise baseline CloudFront WAF ACL that this module enforces. Deploy this workspace first.
